@@ -1,0 +1,11 @@
+{
+  "name": "com.grantlutz.presencesimulator",
+  "version": "1.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "homey-api": "^3.6.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

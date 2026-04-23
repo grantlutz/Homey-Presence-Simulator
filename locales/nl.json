@@ -1,0 +1,32 @@
+{
+  "title": "Aanwezigheidssimulator",
+  "intro": "Kies welke apparaten meedoen en wanneer de simulatie draait.",
+  "sections": {
+    "devices": "Deelnemende apparaten",
+    "schedule": "Schema",
+    "behavior": "Simulatiegedrag",
+    "presence": "Aanwezigheidsdetectie",
+    "prompt": "Vraag",
+    "integration": "Integratie",
+    "activity": "Recente activiteit"
+  },
+  "fields": {
+    "startMode": "Startmodus",
+    "sunsetOffset": "Zonsondergang-offset (minuten)",
+    "fixedStartTime": "Vaste starttijd (HH:MM)",
+    "endTime": "Eindtijd (HH:MM)",
+    "jitter": "Jitter (±minuten)",
+    "whosHome": "Gebruik Homey's Wie-is-thuis",
+    "manualTrigger": "Sta handmatige Flow-trigger toe",
+    "motionSensors": "Bewegingssensoren",
+    "doorSensors": "Deur-/raamsensoren",
+    "recipients": "Ontvangers (leeg = alle gebruikers)",
+    "autoArm": "Automatisch inschakelen wanneer Homey in Afwezig-modus gaat"
+  },
+  "buttons": {
+    "save": "Opslaan"
+  },
+  "prompt": {
+    "body": "Aanwezigheid gedetecteerd om {{when}} ({{reason}}: {{detail}}). Simulatie voor de rest van vanavond pauzeren?"
+  }
+}

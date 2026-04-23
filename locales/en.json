@@ -1,0 +1,32 @@
+{
+  "title": "Presence Simulator",
+  "intro": "Configure which devices participate and when simulation runs.",
+  "sections": {
+    "devices": "Participating devices",
+    "schedule": "Schedule",
+    "behavior": "Simulation behavior",
+    "presence": "Presence detection",
+    "prompt": "Prompt",
+    "integration": "Integration",
+    "activity": "Recent activity"
+  },
+  "fields": {
+    "startMode": "Start mode",
+    "sunsetOffset": "Sunset offset (minutes)",
+    "fixedStartTime": "Fixed start time (HH:MM)",
+    "endTime": "End time (HH:MM)",
+    "jitter": "Jitter (±minutes)",
+    "whosHome": "Use Homey's Who's Home",
+    "manualTrigger": "Allow manual Flow trigger",
+    "motionSensors": "Motion sensors",
+    "doorSensors": "Door/window sensors",
+    "recipients": "Recipients (empty = all users)",
+    "autoArm": "Auto-arm when Homey enters Away mode"
+  },
+  "buttons": {
+    "save": "Save"
+  },
+  "prompt": {
+    "body": "Presence detected at {{when}} ({{reason}}: {{detail}}). Pause presence simulation for the rest of tonight?"
+  }
+}

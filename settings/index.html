@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Presence Simulator Settings</title>
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; max-width: 760px; margin: 16px auto; padding: 0 12px; color: #222; }
+    h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 24px; }
+    fieldset { border: 1px solid #ddd; border-radius: 6px; margin: 12px 0; padding: 12px 14px; }
+    legend { font-weight: 600; padding: 0 6px; }
+    label { display: block; margin: 6px 0 2px; font-size: 14px; }
+    input[type="number"], input[type="text"], select { width: 100%; padding: 6px; box-sizing: border-box; }
+    .row { display: flex; gap: 12px; }
+    .row > div { flex: 1; }
+    .zone { margin: 8px 0; }
+    .zone-title { font-weight: 600; margin-top: 10px; }
+    .dev { border: 1px solid #eee; border-radius: 4px; padding: 8px; margin: 4px 0; }
+    .dev-header { display: flex; align-items: center; gap: 8px; }
+    .dev-body { display: none; margin-top: 8px; }
+    .dev.open .dev-body { display: block; }
+    .err { color: #c22; font-size: 13px; margin-top: 6px; }
+    button { padding: 8px 16px; font-size: 14px; border-radius: 4px; border: 1px solid #888; background: #f6f6f6; cursor: pointer; }
+    button.primary { background: #2E6BE6; color: white; border-color: #2E6BE6; }
+    .activity { font-family: monospace; font-size: 12px; max-height: 240px; overflow-y: auto; background: #fafafa; padding: 8px; border: 1px solid #eee; }
+    .muted { color: #777; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<h1 data-i18n="title">Presence Simulator</h1>
+<p class="muted" data-i18n="intro">Configure which devices participate and when simulation runs.</p>
+
+<fieldset>
+  <legend data-i18n="sections.devices">Participating devices</legend>
+  <div id="device-picker">Loading…</div>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.schedule">Schedule</legend>
+  <div class="row">
+    <div>
+      <label data-i18n="fields.startMode">Start mode</label>
+      <select id="startMode">
+        <option value="sunset-offset">Sunset offset</option>
+        <option value="fixed">Fixed time</option>
+      </select>
+    </div>
+    <div>
+      <label data-i18n="fields.sunsetOffset">Sunset offset (minutes)</label>
+      <input type="number" id="sunsetOffsetMinutes" value="-30" />
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label data-i18n="fields.fixedStartTime">Fixed start time (HH:MM)</label>
+      <input type="text" id="fixedStartTime" placeholder="18:00" />
+    </div>
+    <div>
+      <label data-i18n="fields.endTime">End time (HH:MM)</label>
+      <input type="text" id="endTime" value="23:30" />
+    </div>
+    <div>
+      <label data-i18n="fields.jitter">Jitter (±minutes)</label>
+      <input type="number" id="jitterMinutes" value="15" />
+    </div>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.behavior">Simulation behavior</legend>
+  <div class="row">
+    <div>
+      <label>minActionIntervalMinutes</label>
+      <input type="number" id="minActionIntervalMinutes" min="1" max="60" value="1" />
+    </div>
+    <div>
+      <label>maxActionIntervalMinutes</label>
+      <input type="number" id="maxActionIntervalMinutes" min="1" max="240" value="30" />
+    </div>
+    <div>
+      <label>maxConcurrentOn</label>
+      <input type="number" id="maxConcurrentOn" min="1" value="3" />
+    </div>
+  </div>
+  <div id="behavior-err" class="err"></div>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.presence">Presence detection</legend>
+  <label><input type="checkbox" id="whosHomeEnabled" /> <span data-i18n="fields.whosHome">Use Homey's Who's Home</span></label>
+  <label><input type="checkbox" id="manualTriggerEnabled" /> <span data-i18n="fields.manualTrigger">Allow manual Flow trigger</span></label>
+  <label data-i18n="fields.motionSensors">Motion sensors (comma-separated device IDs)</label>
+  <input type="text" id="motionDeviceIds" placeholder="id1,id2" />
+  <label data-i18n="fields.doorSensors">Door/window sensors (comma-separated device IDs)</label>
+  <input type="text" id="doorDeviceIds" placeholder="id1,id2" />
+  <div class="row">
+    <div>
+      <label>triggerThreshold</label>
+      <input type="number" id="triggerThreshold" min="1" value="1" />
+    </div>
+    <div>
+      <label>triggerWindowMinutes</label>
+      <input type="number" id="triggerWindowMinutes" min="1" value="5" />
+    </div>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.prompt">Prompt</legend>
+  <div class="row">
+    <div>
+      <label>timeoutSeconds</label>
+      <input type="number" id="timeoutSeconds" min="5" value="120" />
+    </div>
+    <div>
+      <label>cooldownMinutes</label>
+      <input type="number" id="cooldownMinutes" min="0" value="30" />
+    </div>
+  </div>
+  <label data-i18n="fields.recipients">Recipients (empty = all users)</label>
+  <select id="recipientUserIds" multiple size="4"></select>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.integration">Integration</legend>
+  <label><input type="checkbox" id="autoArmWithHomeyAway" /> <span data-i18n="fields.autoArm">Auto-arm when Homey enters Away mode</span></label>
+</fieldset>
+
+<fieldset>
+  <legend data-i18n="sections.activity">Recent activity (last 50)</legend>
+  <div id="activity" class="activity">—</div>
+</fieldset>
+
+<p>
+  <button id="save" class="primary" data-i18n="buttons.save">Save</button>
+  <span id="save-status" class="muted" style="margin-left: 10px;"></span>
+</p>
+
+<script type="text/javascript" src="./settings.js"></script>
+</body>
+</html>

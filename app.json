@@ -1,0 +1,145 @@
+{
+  "id": "com.grantlutz.presencesimulator",
+  "version": "1.0.0",
+  "compatibility": ">=8.0.0",
+  "sdk": 3,
+  "platforms": ["local"],
+  "name": { "en": "Presence Simulator", "nl": "Aanwezigheidssimulator" },
+  "description": {
+    "en": "Simulates a lived-in home by cycling selected lights and switches in a plausible random pattern while you are away.",
+    "nl": "Simuleert een bewoond huis door gekozen lampen en schakelaars in een aannemelijk willekeurig patroon aan en uit te zetten terwijl u weg bent."
+  },
+  "category": ["security"],
+  "permissions": [
+    "homey:manager:api",
+    "homey:manager:geolocation",
+    "homey:manager:presence"
+  ],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": { "name": "Grant Lutz" },
+  "brandColor": "#2E6BE6",
+  "capabilities": {
+    "alarm_presence_simulator_active": {
+      "type": "boolean",
+      "title": { "en": "Active window", "nl": "Actief venster" },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/capability_active.svg"
+    },
+    "alarm_presence_simulator_paused": {
+      "type": "boolean",
+      "title": { "en": "Paused", "nl": "Gepauzeerd" },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/capability_paused.svg"
+    },
+    "measure_devices_on": {
+      "type": "number",
+      "title": { "en": "Devices on", "nl": "Apparaten aan" },
+      "getable": true,
+      "setable": false,
+      "units": { "en": "" },
+      "decimals": 0,
+      "uiComponent": "sensor",
+      "icon": "/assets/capability_devices_on.svg"
+    }
+  },
+  "drivers": [
+    {
+      "id": "simulator",
+      "name": { "en": "Presence Simulator", "nl": "Aanwezigheidssimulator" },
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "alarm_presence_simulator_active",
+        "alarm_presence_simulator_paused",
+        "measure_devices_on"
+      ],
+      "platforms": ["local"],
+      "connectivity": ["lan"],
+      "images": {
+        "small": "/drivers/simulator/assets/images/small.png",
+        "large": "/drivers/simulator/assets/images/large.png",
+        "xlarge": "/drivers/simulator/assets/images/xlarge.png"
+      },
+      "pair": [
+        { "id": "add_devices", "template": "add_devices" }
+      ]
+    }
+  ],
+  "flow": {
+    "triggers": [
+      { "id": "simulation_started", "title": { "en": "Simulation started", "nl": "Simulatie gestart" } },
+      { "id": "simulation_stopped", "title": { "en": "Simulation stopped", "nl": "Simulatie gestopt" } },
+      { "id": "window_opened", "title": { "en": "Simulation window opened", "nl": "Simulatievenster geopend" } },
+      { "id": "window_closed", "title": { "en": "Simulation window closed", "nl": "Simulatievenster gesloten" } },
+      {
+        "id": "simulation_paused",
+        "title": { "en": "Simulation paused", "nl": "Simulatie gepauzeerd" },
+        "tokens": [
+          { "name": "reason", "type": "string", "title": { "en": "Reason" }, "example": { "en": "presence-detected" } }
+        ]
+      },
+      { "id": "simulation_resumed", "title": { "en": "Simulation resumed", "nl": "Simulatie hervat" } },
+      {
+        "id": "device_turned_on",
+        "title": { "en": "Device turned on by simulator", "nl": "Apparaat aangezet door simulator" },
+        "tokens": [
+          { "name": "device_name", "type": "string", "title": { "en": "Device" }, "example": { "en": "Kitchen Lamp" } }
+        ]
+      },
+      {
+        "id": "device_turned_off",
+        "title": { "en": "Device turned off by simulator", "nl": "Apparaat uitgezet door simulator" },
+        "tokens": [
+          { "name": "device_name", "type": "string", "title": { "en": "Device" }, "example": { "en": "Kitchen Lamp" } }
+        ]
+      },
+      { "id": "prompt_sent", "title": { "en": "Presence prompt sent", "nl": "Aanwezigheidsvraag verzonden" } },
+      {
+        "id": "prompt_answered",
+        "title": { "en": "Presence prompt answered", "nl": "Aanwezigheidsvraag beantwoord" },
+        "tokens": [
+          { "name": "answer", "type": "string", "title": { "en": "Answer" }, "example": { "en": "yes" } }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_armed",
+        "title": { "en": "Simulator !{{is|isn't}} armed", "nl": "Simulator !{{is|is niet}} ingeschakeld" }
+      },
+      {
+        "id": "is_in_window",
+        "title": { "en": "Simulator !{{is|isn't}} in active window", "nl": "Simulator !{{is|is niet}} in actief venster" }
+      },
+      {
+        "id": "is_paused",
+        "title": { "en": "Simulator !{{is|isn't}} paused", "nl": "Simulator !{{is|is niet}} gepauzeerd" }
+      }
+    ],
+    "actions": [
+      { "id": "arm", "title": { "en": "Start presence simulation", "nl": "Start aanwezigheidssimulatie" } },
+      { "id": "disarm", "title": { "en": "Stop presence simulation", "nl": "Stop aanwezigheidssimulatie" } },
+      { "id": "pause_until_next_window", "title": { "en": "Pause simulation until next window", "nl": "Pauzeer tot volgend venster" } },
+      {
+        "id": "pause_for_minutes",
+        "title": { "en": "Pause simulation for [[minutes]] minutes", "nl": "Pauzeer simulatie voor [[minutes]] minuten" },
+        "args": [
+          { "name": "minutes", "type": "number", "min": 1, "max": 1440, "placeholder": { "en": "Minutes" } }
+        ]
+      },
+      { "id": "resume", "title": { "en": "Resume simulation now", "nl": "Hervat simulatie nu" } },
+      { "id": "mark_home", "title": { "en": "Mark someone as home", "nl": "Markeer iemand als thuis" } },
+      { "id": "send_prompt_now", "title": { "en": "Send presence prompt now (debug)", "nl": "Stuur aanwezigheidsvraag nu (debug)" } },
+      { "id": "answer_prompt_yes", "title": { "en": "Answer presence prompt: Yes", "nl": "Beantwoord aanwezigheidsvraag: Ja" } },
+      { "id": "answer_prompt_no", "title": { "en": "Answer presence prompt: No", "nl": "Beantwoord aanwezigheidsvraag: Nee" } }
+    ]
+  }
+}
